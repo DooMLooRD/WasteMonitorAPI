@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WasteMonitorAPI.Database;
+using WasteMonitorAPI.Hubs;
 using WasteMonitorAPI.Services;
 
 namespace WasteMonitorAPI
@@ -32,6 +33,7 @@ namespace WasteMonitorAPI
             services.AddDbContext<WasteMonitorContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("WasteMonitorContext")), ServiceLifetime.Singleton);
             services.AddSingleton<WasteDataService>();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,8 +48,11 @@ namespace WasteMonitorAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<WasteMonitorHub>("/wasteMonitorHub");
+            });
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
