@@ -26,9 +26,5 @@ namespace WasteMonitorAPI.Hubs
             });
         }
 
-        public async Task RefreshData()
-        {
-            await Clients.All.SendAsync("Refresh");
-        }
     }
 }

@@ -31,5 +31,10 @@ namespace WasteMonitorAPI.Services
             _wasteMonitorContext.SaveChanges();
             return data.Id;
         }
+
+        public WasteData GetLatest()
+        {
+            return _wasteMonitorContext.WasteData.Last();
+        }
     }
 }

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using WasteMonitorAPI.Database;
+using WasteMonitorAPI.Hubs;
 using WasteMonitorAPI.Services;
 
 namespace WasteMonitorAPI.Controllers
@@ -14,10 +16,12 @@ namespace WasteMonitorAPI.Controllers
     public class WasteDataController : ControllerBase
     {
         private WasteDataService _wasteDataService;
+        private IHubContext<WasteMonitorHub> _wasteMonitorHub;
 
-        public WasteDataController(WasteDataService wasteDataService)
+        public WasteDataController(WasteDataService wasteDataService, IHubContext<WasteMonitorHub> hubContext)
         {
             _wasteDataService = wasteDataService;
+            _wasteMonitorHub = hubContext;
         }
 
 
@@ -27,10 +31,9 @@ namespace WasteMonitorAPI.Controllers
         {
             return _wasteDataService.GetAllData();
         }
-
-        // GET: api/WasteData/5
-        [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int id)
+        [HttpGet]
+        [Route("latest")]
+        public IActionResult Latest(int id)
         {
 
             if (!ModelState.IsValid)
@@ -38,13 +41,21 @@ namespace WasteMonitorAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var data = _wasteDataService.GetData(id);
+            var data = _wasteDataService.GetLatest();
 
             if (data == null)
             {
                 return NotFound(new { message = "Data not found" });
             }
             return Ok(data);
+        }
+        // GET: api/WasteData/Latest
+        [HttpGet]
+        [Route("refresh")]
+        public IActionResult Refresh()
+        {
+            _wasteMonitorHub.Clients.All.SendAsync("Refresh");
+            return Ok();
         }
 
         // POST: api/WasteData
@@ -67,16 +78,6 @@ namespace WasteMonitorAPI.Controllers
             }
         }
 
-        // PUT: api/WasteData/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
