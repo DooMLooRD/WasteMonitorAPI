@@ -31,8 +31,8 @@ namespace WasteMonitorAPI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<WasteMonitorContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("WasteMonitorContext")), ServiceLifetime.Singleton);
-            services.AddSingleton<WasteDataService>();
+                options.UseSqlServer(Configuration.GetConnectionString("WasteMonitorContext")), ServiceLifetime.Scoped);
+            services.AddScoped<WasteDataService>();
             services.AddSignalR();
         }
 

@@ -11,6 +11,7 @@ namespace WasteMonitorAPI.Database
         public DateTime DateTime { get; set; }
         public double Weight { get; set; }
         public double FillingLevel { get; set; }
+        public bool wasEmptied { get; set; }
 
     }
 }

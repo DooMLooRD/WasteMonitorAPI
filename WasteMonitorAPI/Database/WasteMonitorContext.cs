@@ -17,7 +17,7 @@ namespace WasteMonitorAPI.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WasteData>(e =>
-                e.HasData(new WasteData() {DateTime = DateTime.Now, FillingLevel = 0.5, Weight = 20, Id = 1}));
+                e.HasData(new WasteData() { DateTime = DateTime.Now, FillingLevel = 0.5, Weight = 20, Id = 1, wasEmptied = false }));
         }
     }
 }
