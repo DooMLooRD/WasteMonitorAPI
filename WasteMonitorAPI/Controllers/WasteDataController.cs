@@ -49,6 +49,37 @@ namespace WasteMonitorAPI.Controllers
             }
             return Ok(data);
         }
+
+        [HttpGet]
+        [Route("summary")]
+        public ActionResult<IEnumerable<double>> Summary()
+        {
+            try
+            {
+                var result = _wasteDataService.GetWeightSummary();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("histogram")]
+        public ActionResult<Dictionary<DayOfWeek, int>> Histogram()
+        {
+            try
+            {
+                var result = _wasteDataService.GetDayHistogram();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+        }
+
         // GET: api/WasteData/Latest
         [HttpGet]
         [Route("refresh")]

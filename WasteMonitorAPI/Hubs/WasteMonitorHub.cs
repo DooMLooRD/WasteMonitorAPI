@@ -15,15 +15,15 @@ namespace WasteMonitorAPI.Hubs
         {
             _wasteDataService = wasteDataService;
         }
-        public void SendData(double weight, double fillingLevel, bool empty=false)
+        public void SendData(DateTime dateTime, double weight, double fillingLevel, bool empty = false)
         {
 
             _wasteDataService.InsertData(new WasteData()
             {
-                DateTime = DateTime.Now,
+                DateTime = dateTime,
                 FillingLevel = fillingLevel,
                 Weight = weight,
-                wasEmptied=empty
+                wasEmptied = empty
             });
         }
 
