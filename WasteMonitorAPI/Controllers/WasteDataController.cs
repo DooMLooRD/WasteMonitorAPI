@@ -52,7 +52,7 @@ namespace WasteMonitorAPI.Controllers
 
         [HttpGet]
         [Route("summary")]
-        public ActionResult<IEnumerable<double>> Summary()
+        public ActionResult<IEnumerable<(int, double)>> Summary()
         {
             try
             {

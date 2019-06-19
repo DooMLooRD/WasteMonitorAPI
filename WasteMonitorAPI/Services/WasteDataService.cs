@@ -15,9 +15,9 @@ namespace WasteMonitorAPI.Services
             _wasteMonitorContext = wasteMonitorContext;
         }
 
-        public List<double> GetWeightSummary()
+        public List<(int, double)> GetWeightSummary()
         {
-            List<double> result = _wasteMonitorContext.WasteData.Where(c => c.wasEmptied).GroupBy(c => c.DateTime.Month).Select(c => c.Sum(d => d.Weight)).ToList();
+            List<(int, double)> result = _wasteMonitorContext.WasteData.Where(c => c.wasEmptied).GroupBy(c => c.DateTime.Month).Select(c => new ValueTuple<int, double>(c.Key, c.Sum(d => d.Weight))).ToList();
             int diff = result.Count - 10;
             return result.Skip(diff > 0 ? diff : 0).ToList();
         }
@@ -30,6 +30,7 @@ namespace WasteMonitorAPI.Services
                 result[(DayOfWeek)i] = 0;
             }
             int currentMonth = DateTime.Now.Month - 1;
+            currentMonth = currentMonth > 0 ? currentMonth : 12;
             List<WasteData> filteredData = _wasteMonitorContext.WasteData.Where(c => c.wasEmptied && c.DateTime.Month == currentMonth).ToList();
             foreach (var data in filteredData)
             {
