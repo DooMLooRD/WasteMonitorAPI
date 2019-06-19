@@ -17,9 +17,9 @@ namespace WasteMonitorAPI.Services
 
         public List<(int, double)> GetWeightSummary()
         {
-            List<(int, double)> result = _wasteMonitorContext.WasteData.Where(c => c.wasEmptied).GroupBy(c => c.DateTime.Month).Select(c => new ValueTuple<int, double>(c.Key, c.Sum(d => d.Weight))).ToList();
+            var result = _wasteMonitorContext.WasteData.Where(c => c.wasEmptied).GroupBy(c => c.DateTime.Month).Select(c => new { key = c.Key, value = c.Sum(d => d.Weight) }).ToList();
             int diff = result.Count - 10;
-            return result.Skip(diff > 0 ? diff : 0).ToList();
+            return result.Select(c => (c.key, c.value)).Skip(diff > 0 ? diff : 0).ToList();
         }
 
         public Dictionary<DayOfWeek, int> GetDayHistogram()
